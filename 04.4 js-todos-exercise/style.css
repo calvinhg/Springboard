@@ -1,0 +1,7 @@
+#todoList button {
+  margin: 1px 5px
+}
+
+.done {
+  text-decoration: line-through;
+}
