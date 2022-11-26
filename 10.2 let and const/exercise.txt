@@ -1,0 +1,23 @@
+// ES5 Global Constants
+var PI = 3.14;
+PI = 42; // stop me from doing this!
+
+// ES2015 Global Constants
+/* Write an ES2015 Version */
+const PI = 3.14;
+PI = 42; // TypeError: Assignment to constant variable
+
+// Quiz
+    What is the difference between var and let?
+    var allows you to redeclare the variable again, and is scoped to a function.
+    let doesn't allow you to redeclare the variable, and is scoped to a block.
+
+    What is the difference between var and const?
+    var allows you to redeclare the variable again and to reassign the value inside it. It is scoped to a function.
+    let doesn't allow you to redeclare the variable or to reassign its value. It is scoped to a block.
+
+    What is the difference between let and const?
+    let allows you to reassign its value, wherease const doens't.
+
+    What is hoisting?
+    It's what a compiler does at the beginning of compiling a script. It finds all the var variables and declares them before anything else. So if you try to access a var variable before you declared it, you will get undefined instead of a ReferenceError.
