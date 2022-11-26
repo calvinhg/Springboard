@@ -73,17 +73,28 @@ console.log(numbers); // [10, 30, 20]
 // In this exercise, you’ll refactor some ES5 code into ES2015.
 
 // ES5 Assigning Variables to Object Properties
-var obj = {
+var obj1 = {
   numbers: {
     a: 1,
     b: 2,
   },
 };
-var a = obj.numbers.a;
-var b = obj.numbers.b;
+var a1 = obj1.numbers.a;
+var b1 = obj1.numbers.b;
 
 // ES2015 Object Destructuring
 /* Write an ES2015 Version */
+
+const obj = {
+  numbers: {
+    a: 1,
+    b: 2,
+  },
+};
+const {
+  numbers: { a, b },
+} = obj;
+console.log("numbers:", a, b);
 
 // ES5 Array Swap
 var arr = [1, 2];
@@ -94,19 +105,31 @@ arr[1] = temp;
 // ES2015 One-Line Array Swap with Destructuring
 /* Write an ES2015 Version */
 
+const array = [1, 3];
+[array[0], array[1]] = [array[1], array[0]];
+console.log("Array swap:", array);
+
 // raceResults()
 // Write a function called raceResults which accepts a single array argument. It should return an object with the keys first, second, third, and rest.
 
-// first: the first element in the array
-// second: the second element in the array
-// third: the third element in the array
-// rest: all other elements in the array
-// Write a one line function to make this work using
-// An arrow function
-// Destructuring
-// ‘Enhanced’ object assignment (same key/value shortcut)
+// - first: the first element in the array
+// - second: the second element in the array
+// - third: the third element in the array
+// - rest: all other elements in the array
 
-raceResults(["Tom", "Margaret", "Allison", "David", "Pierre"]);
+// Write a one line function to make this work using
+// - An arrow function
+// - Destructuring
+// - ‘Enhanced’ object assignment (same key/value shortcut)
+
+const raceResults = ([first, second, third, ...rest]) => ({
+  first,
+  second,
+  third,
+  rest,
+});
+
+console.log(raceResults(["Tom", "Margaret", "Allison", "David", "Pierre"]));
 
 /*
   {
