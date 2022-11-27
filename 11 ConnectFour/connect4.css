@@ -1,0 +1,118 @@
+body {
+  background-color: black;
+  color: blue;
+  text-align: center;
+  font-family: Segoe UI;
+  margin: 0;
+}
+
+#game {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+table {
+  border-spacing: 5px;
+  margin: 0;
+}
+
+#board {
+  height: 50vw;
+  width: 50vw;
+  /* border: solid 2px blue; */
+}
+
+/* game board table */
+#board td, th {
+  width: 50px;
+  height: 50px;
+  border: solid 2px blue;
+}
+
+td {
+  vertical-align: top;
+}
+
+/* column-top is table row of clickable areas for each column */
+
+th {
+  border-style: dashed;
+  border-top-width: 1px;
+}
+
+/* pieces are div within game table cells: draw as colored circles */
+
+.piece {
+  margin: 5px;
+  width: 80%;
+  height: 80%;
+}
+
+.p1 {
+  background-image: url(images/pacman.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  color: gold;
+}
+
+.p2 {
+  background-image: url(images/ghost.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  color: red;
+}
+
+#column-top.Pacman th:hover {
+  background: darkslateblue url(images/pacman.png) no-repeat center;
+  background-size: 70%;
+}
+
+#column-top.Ghost th:hover {
+  background: darkslateblue url(images/ghost.png) no-repeat center;
+  background-size: 70%;
+}
+
+aside {
+  margin: 0 5%;
+  padding: 2%;
+  font-weight: 650;
+  border: 2px solid blue;
+  height: 49vw;
+  width: 30vw;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+}
+
+h3 {
+  margin: 0;
+}
+
+#restart {
+  background-color: blue;
+  color: gold;
+  padding: 2%;
+}
+
+#restart:hover {
+  cursor: pointer;
+}
+
+#winBanner {
+  font-size: 4em;
+  position: fixed;
+  top: 20vw;
+  width: 100vw;
+  background-color: darkslateblue;
+  padding-bottom: 1%;
+  opacity: 0;
+  transition: 200ms;
+}
+
+#winBanner.visible {
+  opacity: 1;
+  transition: 500ms;
+}
