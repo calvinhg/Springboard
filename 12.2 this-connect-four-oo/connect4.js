@@ -15,6 +15,7 @@ class Game {
 
     this.currPlayer = 0; // active player: 0 or 1
     this.board = []; // array of rows, each row is array of cells  (board[y][x])
+    this.end = false;
 
     this.makeBoard();
     this.makeHtmlBoard();
@@ -82,6 +83,7 @@ class Game {
 
   /** endGame: announce game end */
   endGame(msg) {
+    this.end = true;
     alert(msg);
   }
 
@@ -92,7 +94,7 @@ class Game {
 
     // get next spot in column (if none, ignore click)
     const y = this.findSpotForCol(x);
-    if (y === null) {
+    if (y === null || this.end) {
       return;
     }
 
@@ -174,4 +176,12 @@ class Game {
   }
 }
 
-let test = new Game(HEIGHT, WIDTH);
+let newGame = {};
+const startBtn = document.querySelector("#start");
+startBtn.addEventListener("click", () => {
+  // Clear htmlBoard if newGame already exists
+  if (newGame.end !== undefined) {
+    document.querySelector("#board").innerHTML = "";
+  }
+  newGame = new Game(HEIGHT, WIDTH);
+});
