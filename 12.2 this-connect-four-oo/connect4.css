@@ -1,5 +1,22 @@
 body{
   background-color: black;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+input {
+  margin: 10px 2px;
+}
+
+button {
+  margin: 10px;
 }
 
 /* game board table */
@@ -17,7 +34,7 @@ body{
   width: 80%;
   height: 80%;
   border-radius: 50%;
-  border: .5px solid white;
+  border: .5px solid #666;
 }
 
 /* column-top is table row of clickable areas for each column */
