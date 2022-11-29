@@ -9,11 +9,13 @@ const HEIGHT = 6;
 const WIDTH = 7;
 
 class Game {
-  constructor(height, width) {
+  constructor(height, width, p1, p2) {
     this.height = height;
     this.width = width;
 
-    this.currPlayer = 0; // active player: 0 or 1
+    this.player1 = p1; // active player: 1 or 2
+    this.player2 = p2;
+    this.currPlayer = p1;
     this.board = []; // array of rows, each row is array of cells  (board[y][x])
     this.end = false;
 
@@ -74,7 +76,8 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement("div");
     piece.classList.add("piece");
-    piece.classList.add(`p${this.currPlayer}`);
+    // piece.classList.add(`p${this.currPlayer.name}`);
+    piece.style.backgroundColor = this.currPlayer.color;
     piece.style.top = -50 * (y + 2);
 
     const spot = document.getElementById(`${y}-${x}`);
@@ -104,7 +107,7 @@ class Game {
 
     // check for win
     if (this.checkForWin()) {
-      return this.endGame(`Player ${this.currPlayer} won!`);
+      return this.endGame(`Player ${this.currPlayer.name} won!`);
     }
 
     // check for tie
@@ -113,7 +116,8 @@ class Game {
     }
 
     // switch players
-    this.currPlayer = this.currPlayer === 0 ? 1 : 0;
+    this.currPlayer =
+      this.currPlayer === this.player1 ? this.player2 : this.player1;
   }
 
   /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -176,12 +180,28 @@ class Game {
   }
 }
 
+class Player {
+  constructor(name, color) {
+    this.color = color;
+    this.name = name;
+  }
+}
+
 let newGame = {};
 const startBtn = document.querySelector("#start");
-startBtn.addEventListener("click", () => {
+startBtn.addEventListener("click", (evt) => {
+  evt.preventDefault();
   // Clear htmlBoard if newGame already exists
   if (newGame.end !== undefined) {
     document.querySelector("#board").innerHTML = "";
   }
-  newGame = new Game(HEIGHT, WIDTH);
+  const p1 = new Player(
+    document.querySelector("#p1name").value,
+    document.querySelector("#p1color").value
+  );
+  const p2 = new Player(
+    document.querySelector("#p2name").value,
+    document.querySelector("#p2color").value
+  );
+  newGame = new Game(HEIGHT, WIDTH, p1, p2);
 });
