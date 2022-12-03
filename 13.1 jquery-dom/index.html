@@ -6,6 +6,11 @@
   <link rel="stylesheet"
         href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
   <style>
+    body {
+      background-color: black;
+      color: white;
+      padding-bottom: 10%;
+    }
 
     img {
       max-width: 70%;
@@ -14,6 +19,30 @@
     .image-center {
       display: block;
       margin: 10px auto;
+    }
+
+    .container form {
+      display: flex;
+      flex-flow: column;
+    }
+
+    table {
+      border-spacing: 10px 2px;
+      width: 50vw;
+    }
+
+    .remove {
+      border: 0;
+      width: 8%;
+    }
+
+    th, td {
+      border: solid 2px blue;
+      padding: 1vw;
+    }
+
+    th {
+      text-align: center;
     }
 
   </style>
@@ -60,20 +89,20 @@
   <div class="row mb-5">
     <div class="col-sm-4">
       Red
-      <input class="form-control" type="number" min="0" max="255" value="255">
+      <input class="form-control" id="red" type="number" min="0" max="255" value="255">
     </div>
     <div class="col-sm-4">
       Blue
-      <input class="form-control" type="number" min="0" max="255" value="255">
+      <input class="form-control" id="blue" type="number" min="0" max="255" value="255">
     </div>
     <div class="col-sm-4">
       Green
-      <input class="form-control" type="number" min="0" max="255" value="255">
+      <input class="form-control" id="green" type="number" min="0" max="255" value="255">
     </div>
   </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script>
+<script src="app.js">
   // Add your code here!
 </script>
 </body>
