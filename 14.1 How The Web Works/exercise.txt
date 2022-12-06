@@ -1,0 +1,56 @@
+Part One: Solidify Terminology
+In your own terms, define the following terms:
+
+
+1 What is HTTP?
+  Stands for HyperText Transfer Protocol. It's a procedure websites and connected devices use to communicate with servers.
+  
+2 What is a URL?
+  It's a string that represents an IP address that points to a certain server. It retrieves that number using DNS.
+
+3 What is DNS?
+  Stands for Domain Name Service. It's like a phonebook of URLs, it links each URL to its corresponding IP address.
+
+4 What is a query string?
+  It's a value that can be added at the end of an address that adds extra information, like a search term, a theme setting, a timestamp...
+
+5 What are two HTTP verbs and how are they different?
+  GET and POST are two verbs, aka methods. GET only retrieves (gets) information from a server, whereas POST changes (posts) data in that server.
+
+6 What is an HTTP request?
+  It's what a browser sends to a server. It has a method, like GET or POST, the requested URL, and values like current time, language, cookies, or whatever else it needs.
+
+7 What is an HTTP response?
+  It's what the server sends in response to a request. It contains a status code (200, 404, 500), content for the browser to display and values like current time.
+
+8 What is an HTTP header? Give a couple examples of request and response headers you have seen.
+  It's the information the browser or server sends that contains all the information the receiver needs to complete its action. Request headers contain the information from an http request, and response headers contain the status, language...
+
+  This is a standard request header:
+  GET /Exercises/13.2%20Bootstrap%20Mocks/Step2.html HTTP/1.1
+  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+  Accept-Encoding: gzip, deflate, br
+  Accept-Language: en-US,en
+  Cache-Control: max-age=0
+  Connection: keep-alive
+  DNT: 1
+  Host: 127.0.0.1:5500
+
+  This is a standard response header:
+  HTTP/1.1 304 Not Modified
+  Vary: Origin
+  Access-Control-Allow-Credentials: true
+  Accept-Ranges: bytes
+  Cache-Control: public, max-age=0
+  Last-Modified: Mon, 05 Dec 2022 03:20:36 GMT
+  ETag: W/"1219-184e04cbe16"
+  Date: Tue, 06 Dec 2022 06:01:28 GMT
+  Connection: keep-alive
+  Keep-Alive: timeout=5
+
+9 What are the processes that happen when you type “http://somesite.com/some/page.html” into a browser?
+  1 Use http (protocol)
+  2 Find IP of somesite.com using DNS
+  3 Connect to that server
+  4 Go to port 80 (default http port)
+  4 Ask that server for /some/page.html
