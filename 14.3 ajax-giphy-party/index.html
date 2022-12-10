@@ -4,13 +4,54 @@
 <head>
   <meta charset="UTF-8">
   <title>Giphy Party!</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 
-<body>
+<body class="bg-dark">
 
-<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.js"></script>
-<script src="app.js"></script>
+  <h1 class="display-2 text-light text-center">GIPHY PARTY</h1>
+  <div class="container">
+    <form class="form-group row justify-content-center">
+      <div class="col-6">
+        <input type="text" class="form-control" id="searchInput" placeholder="Enter a search term">
+      </div>
+        <button class="btn btn-secondary">Search Giphy!</button>
+        <button class="btn btn-warning ml-2">Remove GIFs</button>
+    </form>
+  </div>
+
+  <section class="container-fluid pb-5">
+    <div class="row justify-content-center align-items-center mx-2">
+      <div class="col-4 text-center p-1">
+        <img class="img-fluid" width="100%" src="https://media0.giphy.com/media/26FPGI3ZgduhYYVTa/200_d.gif?cid=482277c2bu42t4bcnnk2e8t2tknsizrhai178ts2tmrskif9&rid=200_d.gif&ct=g" alt="">
+      </div>
+      <div class="col-4 text-center p-1">
+        <img class="img-fluid" width="100%" src="https://media0.giphy.com/media/iNZKRliHP4tI4mALtO/200.gif?cid=482277c2bu42t4bcnnk2e8t2tknsizrhai178ts2tmrskif9&rid=200.gif&ct=g" alt="">
+      </div>
+      <div class="col-4 text-center p-1">
+        <img class="img-fluid" width="100%" src="https://media4.giphy.com/media/l5DePfMmB09ZVkh3Af/200.gif?cid=482277c2bu42t4bcnnk2e8t2tknsizrhai178ts2tmrskif9&rid=200.gif&ct=g" alt="">
+      </div>
+      <div class="col-4 text-center p-1">
+        <img class="img-fluid" width="100%" src="https://media1.giphy.com/media/uv7Y6e1tDuiL82Eu1i/200.gif?cid=482277c2bu42t4bcnnk2e8t2tknsizrhai178ts2tmrskif9&rid=200.gif&ct=g" alt="">
+      </div>
+      <div class="col-4 text-center p-1">
+        <img class="img-fluid" width="100%" src="https://media2.giphy.com/media/l3E6uhDAN3W7vylji/200.gif?cid=482277c2bu42t4bcnnk2e8t2tknsizrhai178ts2tmrskif9&rid=200.gif&ct=g" alt="">
+      </div>
+    </div>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.js"></script>
+  <script src="app.js"></script>
 </body>
 
 </html>
