@@ -1,78 +1,67 @@
 "use strict";
 
 const $showsList = $("#shows-list");
-const $episodesArea = $("#episodes-area");
+const $episodesList = $("#episodes-list");
 const $searchForm = $("#search-form");
-
 
 /** Given a search term, search for tv shows that match that query.
  *
  *  Returns (promise) array of show objects: [show, show, ...].
  *    Each show object should contain exactly: {id, name, summary, image}
- *    (if no image URL given by API, put in a default image URL)
  */
-
-async function getShowsByTerm( /* term */) {
-  // ADD: Remove placeholder & make request to TVMaze search shows API.
-
-  return [
-    {
-      id: 1767,
-      name: "The Bletchley Circle",
-      summary:
-        `<p><b>The Bletchley Circle</b> follows the journey of four ordinary 
-           women with extraordinary skills that helped to end World War II.</p>
-         <p>Set in 1952, Susan, Millie, Lucy and Jean have returned to their 
-           normal lives, modestly setting aside the part they played in 
-           producing crucial intelligence, which helped the Allies to victory 
-           and shortened the war. When Susan discovers a hidden code behind an
-           unsolved murder she is met by skepticism from the police. She 
-           quickly realises she can only begin to crack the murders and bring
-           the culprit to justice with her former friends.</p>`,
-      image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/147/369403.jpg"
-    }
-  ]
+async function searchShows(term) {
+  // Make request to TVMaze search shows API
+  const shows = await axios.get(
+    `https://api.tvmaze.com/search/shows?q=${term}`
+  );
+  return shows.data;
 }
 
-
-/** Given list of shows, create markup for each and to DOM */
-
+/** Given list of shows, create markup for each and add to DOM */
 function populateShows(shows) {
   $showsList.empty();
 
-  for (let show of shows) {
+  for (let item of shows) {
+    let { id, name, image, summary } = item.show;
+    // Truncate long summaries
+    if (summary.length > 333) {
+      summary = summary.substring(0, 333) + "...";
+    }
+    // Replace empty images
+    if (image === null) {
+      image = { medium: "https://tinyurl.com/tv-missing" };
+    }
     const $show = $(
-        `<div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
-         <div class="media">
+      `<div data-show-id="${id}" class="show col-sm-6 col-md-4 col-lg-3 mb-4">
+         <div class="card">
            <img 
-              src="http://static.tvmaze.com/uploads/images/medium_portrait/160/401704.jpg" 
-              alt="Bletchly Circle San Francisco" 
-              class="w-25 mr-3">
-           <div class="media-body">
-             <h5 class="text-primary">${show.name}</h5>
-             <div><small>${show.summary}</small></div>
-             <button class="btn btn-outline-light btn-sm Show-getEpisodes">
-               Episodes
+              src="${image.medium}" 
+              alt="${name}" 
+              class="card-img-top mr-3">
+           <div class="card-body">
+             <h5 class="card-title text-primary">${name}</h5>
+             <p class="card-text"><small>${summary}</small></p>
+             <button 
+               type="button"
+               class="btn btn-outline-dark btn-sm EpButton" 
+               data-toggle="modal" 
+               data-target="#episodes-modal">
+             Episodes
              </button>
-           </div>
-         </div>  
-       </div>
-      `);
+           </div></div></div>`
+    );
 
-    $showsList.append($show);  }
+    $showsList.append($show);
+  }
 }
-
 
 /** Handle search form submission: get shows from API and display.
  *    Hide episodes area (that only gets shown if they ask for episodes)
  */
-
 async function searchForShowAndDisplay() {
-  const term = $("#searchForm-term").val();
-  const shows = await getShowsByTerm(term);
+  const term = $("#search-query").val();
+  const shows = await searchShows(term);
 
-  $episodesArea.hide();
   populateShows(shows);
 }
 
@@ -81,13 +70,40 @@ $searchForm.on("submit", async function (evt) {
   await searchForShowAndDisplay();
 });
 
-
 /** Given a show ID, get from API and return (promise) array of episodes:
  *      { id, name, season, number }
  */
-
-// async function getEpisodesOfShow(id) { }
+async function getEpisodesOfShow(id) {
+  // Make request to TVMaze episodes API
+  const episodes = await axios.get(
+    `https://api.tvmaze.com/shows/${id}/episodes`
+  );
+  return episodes.data;
+}
 
 /** Write a clear docstring for this function... */
+function populateEpisodes(episodes) {
+  // Clear old episodes (if any)
+  $episodesList.empty();
 
-// function populateEpisodes(episodes) { }
+  if (episodes.length === 0) {
+    $("#episodes-list").append("<span>No episodes found!</span>");
+  }
+
+  for (let episode of episodes) {
+    // Destructure object
+    const { id, name, season, number } = episode;
+    // Make new li
+    const $episode = $(
+      `<li data-episode-id="${id}">${name} (Season ${season}, number ${number})</li>)`
+    );
+
+    $("#episodes-list").append($episode);
+  }
+}
+
+$showsList.on("click", ".EpButton", async (evt) => {
+  const id = $(evt.target.closest(".show")).data("show-id");
+  const episodes = await getEpisodesOfShow(id);
+  populateEpisodes(episodes);
+});

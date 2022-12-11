@@ -10,21 +10,41 @@
 
     <h1>TV Maze</h1>
 
-    <form class="form-inline" id="search-form">
-      <input class="form-control" id="search-query" value="bletchley">
-      <button class="btn btn-primary" type="submit">Go!</button>
+    <form class="row" id="search-form">
+      <div class="col-6">
+        <input class="form-control" id="search-query" value="bletchley">
+      </div>
+      <div class="col-2">
+        <button class="btn btn-primary" type="submit">Go!</button>
+      </div>
     </form>
 
     <div class="row mt-3" id="shows-list">
     </div>
 
-    <section style="display: none" id="episodes-area">
-      <h2>Episodes</h2> 
-      <ul id="episodes-list">
-      </ul>
-    </section>  
+    <section class="modal fade" id="episodes-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Episodes</h5>
+            <button type="button" class="close btn btn-lg" data-dismiss="modal">
+              <span>&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <ul id="episodes-list"></ul>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" type="button" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <script src="http://unpkg.com/jquery"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"></script>
     <script src="http://unpkg.com/axios/dist/axios.js"></script>
     <script src="tvmaze.js"></script>
 
