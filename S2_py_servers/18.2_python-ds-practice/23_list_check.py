@@ -7,3 +7,12 @@ def list_check(lst):
         >>> list_check([[1], "nope"])
         False
     """
+
+    for item in lst:
+        if type(item) is not list:
+            return False
+    return True
+
+
+# print(list_check([[1], [2, 3]]))
+# print(list_check([[1], "nope"]))

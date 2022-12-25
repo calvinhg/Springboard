@@ -8,7 +8,7 @@ def sum_pairs(nums, goal):
 
     (4, 2) sum to 6, and come before (5, 1):
 
-        >>> sum_pairs([4, 2, 10, 5, 1], 6) # (4, 2)
+        >>> sum_pairs([4, 2, 10, 5, 1], 6)
         (4, 2)
 
     (4, 3) sum to 7, and finish before (5, 2):
@@ -21,3 +21,16 @@ def sum_pairs(nums, goal):
         >>> sum_pairs([11, 20, 4, 2, 1, 5], 100)
         ()
     """
+
+    for i in range(len(nums)):
+        # only check nums that have already appeared
+        for n in nums[0:i]:
+            if nums[i] + n == goal:
+                return (n, nums[i])
+    return ()
+
+
+# print(sum_pairs([1, 2, 2, 10], 4))
+# print(sum_pairs([4, 2, 10, 5, 1], 6))
+# print(sum_pairs([5, 1, 4, 8, 3, 2], 7))
+# print(sum_pairs([11, 20, 4, 2, 1, 5], 100))
