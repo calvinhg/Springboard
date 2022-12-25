@@ -21,3 +21,19 @@ def is_palindrome(phrase):
         >>> is_palindrome('Noon')
         True
     """
+
+    phrase = phrase.lower().replace(" ", "")
+
+    # only need to check first half to second half
+    for i in range(int(len(phrase)/2)):
+        if phrase[i] is not phrase[-i-1]:
+            return False
+
+    return True
+
+
+# print(is_palindrome("tacocat"))
+# print(is_palindrome("noon"))
+# print(is_palindrome("robert"))
+# print(is_palindrome("taco cat"))
+# print(is_palindrome("Noon"))

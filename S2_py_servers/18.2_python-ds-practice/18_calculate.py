@@ -1,5 +1,5 @@
 def calculate(operation, a, b, make_int=False, message='The result is'):
-    """Perform operation on a + b, ()possibly truncating) & returning w/msg.
+    """Perform operation on a + b, (possibly truncating) & returning w/msg.
 
     - operation: 'add', 'subtract', 'multiply', or 'divide'
     - a and b: values to operate on
@@ -24,5 +24,25 @@ def calculate(operation, a, b, make_int=False, message='The result is'):
     If a valid operation isn't provided, return None.
 
         >>> calculate('foo', 2, 3)
-        
+
     """
+
+    if operation == "add":
+        result = a + b
+    elif operation == "subtract":
+        result = a - b
+    elif operation == "multiply":
+        result = a * b
+    elif operation == "divide":
+        result = a / b
+    else:
+        return None
+
+    return f"{message} {int(result) if make_int else result}"
+
+
+# print(calculate('add', 2.5, 4))
+# print(calculate('subtract', 4, 1.5, make_int=True))
+# print(calculate('multiply', 1.5, 2))
+# print(calculate('divide', 10, 4, message='I got'))
+# print(calculate('foo', 2, 3))
