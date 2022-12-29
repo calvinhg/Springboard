@@ -21,12 +21,22 @@ class SerialGenerator:
     100
     """
 
-    def __init__(self, start) -> None:
-        self.start = self.curr = start
+    def __repr__(self) -> str:
+        return f"SerialGenerator(start={self.start}, next={self.next})"
+
+    def __str__(self) -> str:
+        return f"Serial generator with start {self.start} and next {self.next}"
+
+    def __init__(self, start, next=None) -> None:
+        """Class initializer. Saves start and makes new current num"""
+        self.start = start
+        self.next = next if next else start
 
     def generate(self) -> int:
-        self.curr += 1
-        return (self.curr-1)
+        """Increments current num and returns its previous value"""
+        self.next += 1
+        return (self.next-1)
 
     def reset(self) -> None:
-        self.curr = self.start
+        """Resets current num to start it was initialized with"""
+        self.next = self.start
