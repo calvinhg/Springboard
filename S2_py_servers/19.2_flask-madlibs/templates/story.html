@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Your Story{% endblock %}
+
+{% block content %}
+  <h4>Your Story</h4>
+  
+  <div class="bg-secondary rounded-lg p-3 mt-4">
+
+    <!-- for results that have multiple lines -->
+    {% for line in result.split("\n") %}
+    <p>{{line}}</p>
+    {% endfor %}
+
+  </div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Flask Madlibs{% endblock %}
+
+{% block content %}
+  <h4 class="h4 mb-4">Welcome to Flask Madlibs! Try out the simple story or select more advanced ones below!</h4>
+
+  <form action="/story/simple" class="row">
+
+    <!-- Make form inputs for all the prompts -->
+    {% for prompt in simple.prompts %}
+    <div class="form-group col-6 col-md-4 col-lg-2">
+      <label for="{{prompt}}">{{prompt.replace("_", " ").title()}}</label>
+      <input class="form-control" type="text" name="{{prompt}}" id="{{prompt}}">
+    </div>
+    {% endfor %}
+
+    <div class="d-flex justify-content-center col-6 col-md-4 col-lg-2">
+      <button class="btn btn-light align-self-center">Submit</button>
+    </div>
+  </form>
+
+  
+  <!-- Make cloud of buttons for all other stories -->
+  <div class="mt-4 d-flex justify-content-center flex-wrap">
+
+    {% for title in others.keys() %}
+    <a href="/{{title.replace(' ', '_')}}" class="btn btn-outline-light m-2">{{title}}</a>
+    {% endfor %}
+
+  </div>
+{% endblock %}

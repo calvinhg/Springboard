@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+  <p class="h4 mb-4">{{title}}</p>
+
+  <!-- Replace spaces in title with underscores -->
+  <form action="/story/{{title.replace(' ', '_')}}" class="row">
+
+    <!-- Make form inputs for all the prompts -->
+    {% for prompt in story.prompts %}
+    <div class="form-group col-6 col-md-4 col-lg-3 col-xl-2">
+      <label for="{{prompt}}">{{prompt.replace("_", " ").title()}}</label>
+      <input class="form-control" type="text" name="{{prompt}}" id="{{prompt}}">
+    </div>
+    {% endfor %}
+
+    <!-- Columns are responsive to window size -->
+    <div class="d-flex justify-content-center col-6 col-md-4 col-lg-3 col-xl-2">
+      <button class="btn btn-light align-self-center">Submit</button>
+    </div>
+  </form>
+{% endblock %}
