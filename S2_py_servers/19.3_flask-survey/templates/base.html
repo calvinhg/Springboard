@@ -9,9 +9,17 @@
 </head>
 
 <body class="bg-dark text-light text-center">
-  <a href="/">Surveys</a>
+  <a href="/" class="display-3 text-decoration-none">Surveys</a>
 
-  <main class="container">
+  <main class="container mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div class="alert alert-{{cat}}">{{msg}}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
     {% block content %} {% endblock %}
   </main>
 
