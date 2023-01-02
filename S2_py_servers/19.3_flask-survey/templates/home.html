@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Surveys{% endblock %}
+
+{% block content %}
+
+{% for name, survey in surveys.items() %}
+<h4 class="mt-4">{{survey.title}}</h4>
+<p>{{survey.instructions}}</p>
+<a href="/{{name}}/q/1">Click here!</a>
+{% endfor %}
+
+{% endblock %}
