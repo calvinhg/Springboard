@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Thank you{% endblock %}
+
+{% block content %}
+
+<h4 class="my-4">THANK YOU</h4>
+<h5>Your answers:</h5>
+
+{% for answer in responses.values() %}
+<p class="mt-3">{{answer}}</p>
+{% endfor %}
+
+{% endblock %}
