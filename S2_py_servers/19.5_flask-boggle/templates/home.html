@@ -1,6 +1,55 @@
-{% for row in board %}
-  {% for col in row %}
-    <b>{{col}}</p>
-  {% endfor %}
-  <hr>
-{% endfor %}
+{% extends 'base.html' %}
+
+{% block title %}Flask Boggle{% endblock %}
+
+{% block content %}
+
+<section class="row align-items-center my-3">
+  <div class="col-9 d-flex justify-content-center">
+
+    <button id="start" autofocus class="btn btn-outline-light btn- btn-lg my-3">Start</button>
+    <!-- These are alteratively visible -->
+    <table class="table table-dark table-bordered text-center w-50 d-none">
+      <tbody>
+      {% for row in board %}
+        <tr>
+          {% for col in row %}
+          <td>{{col}}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody></table>
+  </div>
+
+  <!-- Sidebar with timer and score -->
+  <aside class="text-center col-3">
+    <div class="alert alert-success">
+      You have:
+      <h2 id="timer">60s</h2>
+    </div>
+    <div class="alert alert-info">
+      Score:
+      <h2 id="score">0</h2>
+    </div>
+  </aside>
+</section>
+
+<!-- Input for guesses, hidden on page load -->
+<div class="input-group mb-3 d-none">
+  <div class="input-group-prepend">
+    <span class="input-group-text">Enter a guess</span>
+  </div>
+  <input type="text" class="form-control" placeholder="(not case sensitive)" id="guess">
+</div>
+
+<div class="row">
+  <div id="words" class="alert alert-dark col ml-3 h-25">
+    Click start to begin!
+    <!-- To show found words -->
+  </div>
+  <div id="messages" class="col">
+    <!-- To show guess results -->
+  </div>
+</div>
+
+{% endblock %}

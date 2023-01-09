@@ -9,33 +9,53 @@ class Boggle():
     def __init__(self):
 
         self.words = self.read_dict("words.txt")
+        self.score = 0
+        self.words_found = set()
+
+    def reset(self):
+        """Reset game"""
+        self.__init__()
 
     def read_dict(self, dict_path):
-        """Read and return all words in dictionary."""
+        """Read and return all words converted to lowercase in dictionary."""
 
         dict_file = open(dict_path)
-        words = [w.strip() for w in dict_file]
+        words = [w.strip().lower() for w in dict_file]
         dict_file.close()
         return words
 
     def make_board(self):
-        """Make and return a random boggle board."""
+        """
+        Make and return a random boggle board.
+        Use of dice.txt which is a list of all possible
+        letters each die can have.
+        """
 
-        board = []
+        with open("dice.txt") as file:
+            # Split into groups of 5
+            dice = file.read().split("\n\n")
 
-        for y in range(5):
-            row = [choice(string.ascii_uppercase) for x in range(5)]
-            board.append(row)
+        # Select one letter from each die for all dice
+        board = [[choice(die.upper()) for die in row.split("\n")]
+                 for row in dice]
 
         return board
 
     def check_valid_word(self, board, word):
-        """Check if a word is a valid word in the dictionary and/or the boggle board"""
+        """
+        Check if a word is a valid word in the dictionary 
+        and/or the boggle board and/or already found
+        """
 
         word_exists = word in self.words
         valid_word = self.find(board, word.upper())
+        new_word = word not in self.words_found
 
-        if word_exists and valid_word:
+        if not new_word:
+            result = "already-found"
+        elif word_exists and valid_word:
+            self.score += len(word)
+            self.words_found.add(word)
             result = "ok"
         elif word_exists and not valid_word:
             result = "not-on-board"
@@ -90,7 +110,7 @@ class Boggle():
 
         seen = seen | {(y, x)}
 
-        # adding diagonals
+        # horizontals and verticals
 
         if y > 0:
             if self.find_from(board, word[1:], y - 1, x, seen):
