@@ -1,79 +1,84 @@
--- DROP DATABASE IF EXISTS medical_center;
--- CREATE DATABASE medical_center;
--- \c medical_center;
+----- MEDICAL CENTER -----
 
--- CREATE TABLE doctors (
---   id SERIAL PRIMARY KEY,
---   name TEXT NOT NULL,
---   phone INT
--- );
+DROP DATABASE IF EXISTS medical_center;
+CREATE DATABASE medical_center;
+\c medical_center;
 
--- CREATE TABLE patients (
---   id SERIAL PRIMARY KEY,
---   name TEXT NOT NULL,
---   phone INT,
---   address TEXT
--- );
+CREATE TABLE doctors (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  phone INT
+);
 
--- CREATE TABLE diseases (
---   id SERIAL PRIMARY KEY,
---   name TEXT NOT NULL
--- );
+CREATE TABLE patients (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  phone INT,
+  address TEXT
+);
 
--- CREATE TABLE doctors_patients (
---   id SERIAL PRIMARY KEY,
---   doc_id INT REFERENCES doctors ON DELETE CASCADE,
---   patient_id INT REFERENCES patients ON DELETE CASCADE
--- );
+CREATE TABLE diseases (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
 
--- CREATE TABLE patients_diseases (
---   id SERIAL PRIMARY KEY,
---   patient_id INT REFERENCES patients ON DELETE CASCADE,
---   disease_id INT REFERENCES diseases ON DELETE CASCADE
--- );
+CREATE TABLE doctors_patients (
+  id SERIAL PRIMARY KEY,
+  doc_id INT REFERENCES doctors ON DELETE CASCADE,
+  patient_id INT REFERENCES patients ON DELETE CASCADE
+);
 
+CREATE TABLE patients_diseases (
+  id SERIAL PRIMARY KEY,
+  patient_id INT REFERENCES patients ON DELETE CASCADE,
+  disease_id INT REFERENCES diseases ON DELETE CASCADE
+);
 
--- DROP DATABASE IF EXISTS craigslist;
--- CREATE DATABASE craigslist;
--- \c craigslist;
+----- CRAIGSLIST -----
 
--- CREATE TABLE regions (
---   id SERIAL PRIMARY KEY,
---   name TEXT NOT NULL
--- );
+DROP DATABASE IF EXISTS craigslist;
+CREATE DATABASE craigslist;
+\c craigslist;
 
--- CREATE TABLE categories (
---   id SERIAL PRIMARY KEY,
---   name TEXT NOT NULL
--- );
+CREATE TABLE regions (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
 
--- CREATE TABLE users (
---   id SERIAL PRIMARY KEY,
---   username VARCHAR(15) UNIQUE NOT NULL,
---   name TEXT NOT NULL,
---   phone INT,
---   email TEXT,
---   region_id INT REFERENCES regions ON DELETE SET NULL
--- );
+CREATE TABLE categories (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
 
--- CREATE TABLE posts (
---   id SERIAL PRIMARY KEY,
---   owner_id INT REFERENCES users ON DELETE CASCADE,
---   category_id INT REFERENCES categories ON DELETE SET NULL,
---   region_id INT REFERENCES regions ON DELETE SET NULL,
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(15) UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  phone INT,
+  email TEXT,
+  region_id INT REFERENCES regions ON DELETE SET NULL
+);
 
---   title VARCHAR(50) NOT NULL,
---   content TEXT,
---   location TEXT,
---   date_posted TIMESTAMP
--- );
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  owner_id INT REFERENCES users ON DELETE CASCADE,
+  category_id INT REFERENCES categories ON DELETE SET NULL,
+  region_id INT REFERENCES regions ON DELETE SET NULL,
 
--- CREATE TABLE pictures (
---   id SERIAL PRIMARY KEY,
---   post_id INT REFERENCES posts ON DELETE CASCADE,
---   href TEXT NOT NULL,
---   ord INT NOT NULL
--- );
+  title VARCHAR(50) NOT NULL,
+  content TEXT,
+  location TEXT,
+  date_posted TIMESTAMP
+);
+
+CREATE TABLE pictures (
+  id SERIAL PRIMARY KEY,
+  post_id INT REFERENCES posts ON DELETE CASCADE,
+  href TEXT NOT NULL,
+  ord INT NOT NULL
+);
+
+----- SOCCER LEAGUE -----
 
 DROP DATABASE IF EXISTS soccer_league;
 CREATE DATABASE soccer_league;
