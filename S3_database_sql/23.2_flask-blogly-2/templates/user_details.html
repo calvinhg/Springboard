@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}{{user.get_name()}}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <img src="{{user.img_url}}" alt="{{user.get_name()}}" class="col-2">
+  <div class="col-10">
+    <h2>{{user.get_name()}}</h2>
+    <form action="/users/{{user.id}}/delete" method="post">
+      <a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit</a>
+      <button class="btn btn-danger">Delete</button>
+    </form>
+  </div>
+  <a href="/users" class="btn btn-outline-light">Back</a>
+</div>
+{% endblock %}
