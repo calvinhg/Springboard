@@ -10,7 +10,11 @@
 
 <body class="bg-dark text-light">
   <main class="container">
-    <a href="/" class="display-3 text-decoration-none mb-4">Blogly</a>
+    <div class="row">
+      <a href="/" class="btn btn-lg btn-outline-light mr-3">Blogly</a>
+      <a href="/users" class="btn btn-lg btn-outline-light">Users</a>
+    </div>
+    <hr>
     
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}

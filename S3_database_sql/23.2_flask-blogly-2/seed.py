@@ -1,6 +1,6 @@
 """Seed file to make sample data for users db."""
 
-from models import User, db
+from models import User, Post, db
 from app import app
 
 # Create all tables
@@ -17,8 +17,16 @@ mike = User(first_name='Michael', last_name='Bummer',
 steve = User(first_name='Steve', last_name='Hope',
              img_url='https://picsum.photos/id/236/200')
 
-# Add new objects to session, so they'll persist
 db.session.add_all([john, mike, steve])
+db.session.commit()
 
-# Commit--otherwise, this never gets saved!
+p1 = Post(title='Welcome to my mine',
+          content='We are mining diamonds', user_id=3)
+p2 = Post(title="We don't have to strip mine",
+          content="We don't have to fight mobs", user_id=2)
+p3 = Post(title='Play that noteblock nicely',
+          content="Show me all those emeralds", user_id=3)
+
+
+db.session.add_all([p1, p2, p3])
 db.session.commit()

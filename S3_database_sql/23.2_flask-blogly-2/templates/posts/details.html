@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ author.full_name }}'s post{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">{{ post.title }}</h2>
+
+<p>{{ post.content }}</p>
+
+<p class="font-weight-lighter">By <i>
+  <a href="/users/{{author.id}}">{{ author.full_name }}</a>
+</i> on {{ post.human_date }}</p>
+
+<form action="/posts/{{post.id}}/delete" method="post">
+  <a href="/posts/{{post.id}}/edit" class="btn btn-primary">Edit</a>
+  <button class="btn btn-danger">Delete</button>
+</form>
+
+<a href="/" class="btn btn-outline-light mt-3">Home</a>
+{% endblock %}
+
