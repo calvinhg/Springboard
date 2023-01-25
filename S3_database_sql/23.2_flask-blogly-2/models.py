@@ -1,7 +1,6 @@
 """Models for Blogly."""
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from sqlalchemy.orm import backref
 
 db = SQLAlchemy()
 

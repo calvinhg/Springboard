@@ -105,7 +105,7 @@ def user_edit(id):
     # Change values if they're not null
     user.first_name = first_name if first_name else user.first_name
     user.last_name = last_name if last_name else user.last_name
-    user.img_url = img_url if img_url else None
+    user.img_url = img_url if img_url else user.img_url
 
     # Add changes to db
     db.session.add(user)
