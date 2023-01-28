@@ -85,9 +85,12 @@ class Tag(db.Model):
     __tablename__ = 'tags'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.Text, nullable=False)
+    name = db.Column(db.String(10), nullable=False)
 
     posts = db.relationship('Post', secondary='posts_tags', backref='tags')
+
+    def __repr__(self) -> str:
+        return f'<Tag {self.id}: {self.name}>'
 
 
 class PostTag(db.Model):
@@ -102,3 +105,6 @@ class PostTag(db.Model):
         'posts.id', ondelete='CASCADE'), primary_key=True)
     tag_id = db.Column(db.Integer, db.ForeignKey(
         'tags.id', ondelete='CASCADE'), primary_key=True)
+
+    def __repr__(self) -> str:
+        return f'<PostTag (Post {self.post_id}, Tag {self.tag_id})>'

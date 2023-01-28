@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from flask import Flask, request, redirect, render_template, flash
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
@@ -127,7 +127,8 @@ def user_delete(id):
 def user_post_new_form(id):
     '''Show form to make new post'''
     user = User.query.get_or_404(id)
-    return render_template('posts/add_form.html', user=user)
+    tag_list = Tag.query.all()
+    return render_template('posts/add_form.html', user=user, tag_list=tag_list)
 
 
 @app.route('/users/<int:id>/posts/new', methods=['POST'])
@@ -145,7 +146,14 @@ def user_add_post(id):
         flash('Your title is too long (no greater than 50 char)', 'warning')
         return redirect(f'/users/{id}/posts/new')
 
-    post = Post(user_id=id, title=title, content=content,)
+    post = Post(user_id=id, title=title, content=content)
+
+    # Add selected tags to post
+    tag_ids = request.form.getlist('tag')
+    if tag_ids:
+        for tag_id in tag_ids:
+            post.tags.append(Tag.query.get(tag_id))
+
     db.session.add(post)
     db.session.commit()
 
@@ -170,7 +178,8 @@ def post_details(id):
 def post_edit_form(id):
     '''Show form to edit post'''
     post = Post.query.get_or_404(id)
-    return render_template('posts/edit_form.html', post=post)
+    tag_list = Tag.query.all()
+    return render_template('posts/edit_form.html', post=post, tag_list=tag_list)
 
 
 @app.route('/posts/<int:id>/edit', methods=['POST'])
@@ -188,6 +197,13 @@ def post_edit(id):
     post.title = title if title else post.title
     post.content = content if content else post.content
 
+    # Add selected tags to post
+    tag_ids = request.form.getlist('tag')
+    if tag_ids:
+        post.tags.clear()
+        for tag_id in tag_ids:
+            post.tags.append(Tag.query.get(tag_id))
+
     db.session.add(post)
     db.session.commit()
 
@@ -201,3 +217,95 @@ def post_delete(id):
     db.session.commit()
 
     return redirect('/')
+
+
+@app.route('/tags')
+def tag_list():
+    '''Show list of tags'''
+    return render_template('tags/list.html', tags=Tag.query.all())
+
+
+@app.route('/tags/<int:id>')
+def tag_details(id):
+    '''Show name and posts and manage buttons for tag'''
+    tag = Tag.query.get_or_404(id)
+    posts = tag.posts
+    return render_template('tags/details.html', tag=tag, posts=posts)
+
+
+@app.route('/tags/new')
+def tag_add_form():
+    '''Show form to add tag'''
+    post_list = Post.query.all()
+    return render_template('tags/add_form.html', post_list=post_list)
+
+
+@app.route('/tags/new', methods=['POST'])
+def tag_add():
+    '''Add tag to db and redirect to tag list,
+    Flash error message if error encountered'''
+    tag_name = request.form['tag_name']
+
+    if not tag_name:
+        flash('Please enter a tag name!', 'danger')
+        return redirect('/tags/new')
+
+    if len(tag_name) > 10:
+        flash('Your tag cannot be longer than 10 characters.', 'warning')
+        return redirect('/tags/new')
+
+    tag = Tag(name=tag_name)
+
+    # Add tag to selected posts
+    post_ids = request.form.getlist('post')
+    if post_ids:
+        for post_id in post_ids:
+            tag.posts.append(Post.query.get(post_id))
+
+    db.session.add(tag)
+    db.session.commit()
+
+    return redirect('/tags')
+
+
+@app.route('/tags/<int:id>/edit')
+def tag_edit_form(id):
+    '''Show form to edit tag'''
+    tag = Tag.query.get_or_404(id)
+    post_list = Post.query.all()
+    return render_template('tags/edit_form.html', tag=tag, post_list=post_list)
+
+
+@app.route('/tags/<int:id>/edit', methods=['POST'])
+def tag_edit(id):
+    '''Edit tag and redirect to tag details'''
+    tag = Tag.query.get_or_404(id)
+    tag_name = request.form['tag_name']
+
+    if len(tag_name) > 10:
+        flash('Your tag cannot be longer than 10 characters.', 'warning')
+        return redirect(f'/tags/{id}/edit')
+
+    # Change values if they're not null
+    tag.name = tag_name if tag_name else tag.name
+
+    # Add tag to selected posts
+    post_ids = request.form.getlist('post')
+    if post_ids:
+        tag.posts.clear()
+        for post_id in post_ids:
+            tag.posts.append(Post.query.get(post_id))
+
+    db.session.add(tag)
+    db.session.commit()
+
+    return redirect(f'/tags/{id}')
+
+
+@app.route('/tags/<int:id>/delete', methods=['POST'])
+def tag_delete(id):
+    '''Delete tag and show tag list'''
+    Tag.query.filter_by(id=id).delete()
+    db.session.commit()
+
+    return redirect('/tags')
