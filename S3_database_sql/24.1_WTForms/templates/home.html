@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}WTPet shop{% endblock %}
+
+{% block content %}
+<row class="row gy-1">
+  {% for pet in pets %}
+  <div class="p-1 col-6">
+    <card class="card bg-secondary">
+      <img src="{{ pet.photo_url }}" alt="{{ pet.name }}" class="card-img-top">
+      <div class="card-body">
+        <h5 class="card-title">{{ pet.name }}</h5>
+        <p class="card-text">{{ pet.notes }}</p>
+        <a href="/{{ pet.id }}" class="btn btn-outline-light">Details</a>
+        <a href="/{{ pet.id }}/reserve" class="btn btn-outline-dark
+        {% if not pet.available %}disabled{% endif %}">Reserve!</a>
+      </div>
+    </card>  
+  </div>
+  {% endfor %}
+</row>
+
+<a href="/add" class="btn btn-lg btn-outline-secondary mt-3">New Pet</a>
+{% endblock %}

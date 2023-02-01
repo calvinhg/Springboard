@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Add a Pet{% endblock %}
+
+{% block content %}
+<h1>New Pet</h1>
+<form method="post">
+  {{ form.hidden_tag() }}
+  <!-- First three only needed for creating -->
+  <div class="form-group">
+    {{ form.name.label(class_='form-label') }}
+    {{ form.name(class_='form-control') }}
+    {% if form.name.errors %}
+      <small class="form-text text-danger">{{ form.name.errors[0] }}</small>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    {{ form.species.label(class_='form-label') }}
+    {{ form.species(class_='form-control') }}
+    {% if form.species.errors %}
+      <small class="form-text text-danger">{{ form.species.errors[0] }}</small>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    {{ form.age.label(class_='form-label') }}
+    {{ form.age(class_='form-control') }}
+    {% if form.age.errors %}
+      <small class="form-text text-danger">{{ form.age.errors[0] }}</small>
+    {% endif %}
+  </div>
+
+  <!-- Three others get reused to edit -->
+  {% include 'pet_add_edit.html' %}
+
+  <button class="btn btn-outline-secondary mt-3">Submit</button>
+</form>
+{% endblock %}
+
+<!-- {% for field in form 
+    if field.widget.input_type != 'hidden' and
+       field.widget.input_type != 'checkbox' %}
+    <div class="form-group">
+      {{ field.label }} {{ field(class_='form-control') }}
+
+      {% for err in field.errors %}
+        <small class="form-text text-danger">
+          {{ err }}
+        </small>
+      {% endfor %}
+    </div>
+  {% endfor %} -->
