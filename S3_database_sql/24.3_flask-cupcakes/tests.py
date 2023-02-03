@@ -17,6 +17,7 @@ db.create_all()
 CUPCAKE_DATA = {
     "flavor": "TestFlavor",
     "size": "TestSize",
+    "frosting": "TestFrosting",
     "rating": 5,
     "image": "http://test.com/cupcake.jpg"
 }
@@ -60,6 +61,7 @@ class CupcakeViewsTestCase(TestCase):
                     {
                         "id": self.cupcake.id,
                         "flavor": "TestFlavor",
+                        "frosting": "TestFrosting",
                         "size": "TestSize",
                         "rating": 5,
                         "image": "http://test.com/cupcake.jpg"
@@ -78,6 +80,7 @@ class CupcakeViewsTestCase(TestCase):
                 "cupcake": {
                     "id": self.cupcake.id,
                     "flavor": "TestFlavor",
+                    "frosting": "TestFrosting",
                     "size": "TestSize",
                     "rating": 5,
                     "image": "http://test.com/cupcake.jpg"
@@ -100,6 +103,7 @@ class CupcakeViewsTestCase(TestCase):
             self.assertEqual(data, {
                 "cupcake": {
                     "flavor": "TestFlavor2",
+                    "frosting": None,
                     "size": "TestSize2",
                     "rating": 10,
                     "image": "http://test.com/cupcake2.jpg"
@@ -107,3 +111,38 @@ class CupcakeViewsTestCase(TestCase):
             })
 
             self.assertEqual(Cupcake.query.count(), 2)
+
+    def test_patch_cupcake(self):
+        with app.test_client() as client:
+            url = f'/api/cupcakes/{self.cupcake.id}'
+            patched_cupcake = {
+                "flavor": "TestFlavorPatch",
+                "rating": 3,
+                "image": "http://test.com/cupcake_patched.jpg"
+            }
+            resp = client.patch(url, json=patched_cupcake)
+
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json
+
+        self.assertIsInstance(data['cupcake']['id'], int)
+        del data['cupcake']['id']
+
+        self.assertEqual(data, {
+            "cupcake": {
+                "flavor": "TestFlavorPatch",
+                "frosting": "TestFrosting",
+                "size": "TestSize",
+                "rating": 3,
+                "image": "http://test.com/cupcake_patched.jpg"
+            }
+        })
+
+    def test_delete_cupcake(self):
+        with app.test_client() as client:
+            resp = client.delete(f'/api/cupcakes/{self.cupcake.id}')
+        data = resp.json
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(data, {'deleted': self.cupcake.id})
+        self.assertEqual(Cupcake.query.count(), 0)

@@ -20,6 +20,8 @@ class Cupcake(db.Model):
     image TEXT NOT NULL DEFAULT 'https://picsum.photos/550/825'
     ```'''
 
+    __tablename__ = 'cupcakes'
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     flavor = db.Column(db.Text, nullable=False)
     frosting = db.Column(db.Text)
@@ -30,3 +32,11 @@ class Cupcake(db.Model):
 
     def __repr__(self) -> str:
         return f'<Cupcake {self.id}: {self.flavor} with {self.frosting} Frosting>'
+
+    def to_dict(self) -> dict:
+        return {'id': self.id,
+                'flavor': self.flavor,
+                'frosting': self.frosting,
+                'size': self.size,
+                'rating': self.rating,
+                'image': self.image}
