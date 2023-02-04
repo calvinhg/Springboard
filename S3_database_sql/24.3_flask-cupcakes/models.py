@@ -34,6 +34,7 @@ class Cupcake(db.Model):
         return f'<Cupcake {self.id}: {self.flavor} with {self.frosting} Frosting>'
 
     def to_dict(self) -> dict:
+        '''Returns dictionary of obj properties'''
         return {'id': self.id,
                 'flavor': self.flavor,
                 'frosting': self.frosting,
