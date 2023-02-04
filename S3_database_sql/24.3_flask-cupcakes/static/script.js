@@ -72,3 +72,8 @@ function showError(msg) {
     $alert.parent().toggleClass("show");
   }, 5000);
 }
+
+/** Scroll to bottom of form when opening it */
+$("#cupcake-form").on("shown.bs.collapse", () =>
+  window.scrollTo(0, window.screenX)
+);
