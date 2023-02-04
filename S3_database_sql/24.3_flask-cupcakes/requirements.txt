@@ -12,8 +12,6 @@ greenlet==2.0.2
 idna==2.8
 importlib-metadata==6.0.0
 itsdangerous==1.1.0
-Jinja2==2.10.3
-MarkupSafe==1.1.1
 psycopg2-binary==2.9.5
 pycodestyle==2.10.0
 requests==2.28.2
