@@ -12,40 +12,9 @@ app.config['SECRET_KEY'] = "cupcake"
 connect_db(app)
 
 
-def check_missing_data(json):
-    '''Checks for missing flavor, size or rating in json.\n
-    Returns dict `{'result': <true_or_false>, 'param':<missing_param>}`'''
-    for param in ('flavor', 'size', 'rating'):
-        if json.get(param) is None:
-            return {'result': True, 'param': param}
-
-    return {'result': False, 'param': None}
-
-
-def make_error(param):
-    '''Makes error body to show in json format'''
-    err_code = 'POST_MISSING_DATA'
-    err_message = f'POST request missing parameter {param}'
-    err_details = 'Please make sure to include flavor, size and rating.'
-
-    return jsonify(err_code=err_code, err_message=err_message, err_details=err_details)
-
-
-def make_cupcake(json):
-    '''Makes cupcake using Model and returns it'''
-    flavor = json.get('flavor')
-    frosting = json.get('frosting')
-    size = json.get('size')
-    rating = json.get('rating')
-    image = json.get('image')
-
-    return Cupcake(flavor=flavor, frosting=frosting,
-                   size=size, rating=rating, image=image)
-
-
 @app.route('/')
 def home():
-    return "a"
+    return render_template('home.html')
 
 
 @app.route('/api/cupcakes')
@@ -97,3 +66,40 @@ def delete_cupcake(id):
     db.session.commit()
 
     return jsonify(deleted=cupcake.id)
+
+
+'''**************************************************
+              FUNCTIONS FOR POST METHOD
+Validates data, makes error json, and creates cupcake
+**************************************************'''
+
+
+def check_missing_data(json):
+    '''Checks for missing flavor, size or rating in json.\n
+    Returns dict `{'result': <true_or_false>, 'param':<missing_param>}`'''
+    for param in ('flavor', 'size', 'rating'):
+        if json.get(param) is None:
+            return {'result': True, 'param': param}
+
+    return {'result': False, 'param': None}
+
+
+def make_error(param):
+    '''Makes error body to show in json format'''
+    err_code = 'POST_MISSING_DATA'
+    err_message = f'POST request missing parameter {param}'
+    err_details = 'Please make sure to include flavor, size and rating.'
+
+    return jsonify(err_code=err_code, err_message=err_message, err_details=err_details)
+
+
+def make_cupcake(json):
+    '''Makes cupcake using Model and returns it'''
+    flavor = json.get('flavor')
+    frosting = json.get('frosting')
+    size = json.get('size')
+    rating = json.get('rating')
+    image = json.get('image')
+
+    return Cupcake(flavor=flavor, frosting=frosting,
+                   size=size, rating=rating, image=image)

@@ -28,7 +28,7 @@ class Cupcake(db.Model):
     size = db.Column(db.Text, nullable=False)
     rating = db.Column(db.Float, nullable=False)
     image = db.Column(db.Text, nullable=False,
-                      default='https://picsum.photos/550/825')
+                      default='https://tinyurl.com/demo-cupcake')
 
     def __repr__(self) -> str:
         return f'<Cupcake {self.id}: {self.flavor} with {self.frosting} Frosting>'
