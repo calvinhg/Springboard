@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{u.username}} details - FeedBook{% endblock %}
+
+{% block content %}
+  <h1 class="display-1">{{ u.username }}</h1>
+
+  <table class="table rounded overflow-hidden">
+    <tbody>
+      <tr class="row">
+        <th class="col-3 ms-2">username</th>
+        <td class="col">{{ u.username }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-3 ms-2">email</th>
+        <td class="col">{{ u.email }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-3 ms-2">first name</th>
+        <td class="col">{{ u.first_name }}</td>
+      </tr>
+      <tr class="row">
+        <th class="col-3 ms-2">last name</th>
+        <td class="col">{{ u.last_name }}</td>
+      </tr>
+    </tbody>
+  </table>
+{% endblock %}
