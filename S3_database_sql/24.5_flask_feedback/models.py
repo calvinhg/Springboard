@@ -28,7 +28,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.Text, nullable=False, unique=True)
     pass_hash = db.Column(db.Text, nullable=False)
-    email = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False, unique=True)
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
 
@@ -52,6 +52,14 @@ class User(db.Model):
             return u
         else:
             return False
+
+    @classmethod
+    def change_pwd(cls, new_pwd):
+        '''Returns new hash of new password'''
+        hashed = bcrypt.generate_password_hash(new_pwd)
+        hashed_utf8 = hashed.decode('utf8')
+
+        return hashed_utf8
 
 
 class Feedback(db.Model):

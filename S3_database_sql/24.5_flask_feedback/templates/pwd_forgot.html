@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Forgot password{% endblock %}
+
+{% block content %}
+  <h1 class="display-1">Fogot password</h1>
+  
+  {% if form %}
+  <p class="lead">Forgot your password? Enter your email and we'll "send you and email".</p>
+  <form method="post">
+    {{ form.hidden_tag() }}
+
+    <div>
+      {{ form.email.label }}
+      {{ form.email(class_='form-control') }}
+      
+      {% for error in form.email.errors %}
+        <span class="form-text text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <button class="btn btn-success mt-3" type="submit">"Send email"</button>
+    <a href="/login" class="btn btn-outline-dark mt-3">Back</a>
+  </form>
+  {% endif %}
+
+  {% if token %}
+    <p class="lead">Here's your "email"! Click this link to 
+      <a href="/pwd-reset?token={{token}}">reset your password</a>.
+    </p>
+  {% endif %}
+
+{% endblock %}

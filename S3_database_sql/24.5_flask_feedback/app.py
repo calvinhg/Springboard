@@ -1,8 +1,9 @@
-from flask import Flask, render_template, redirect, session, flash, abort
+from flask import Flask, render_template, redirect, session, flash, abort, request
 from flask_debugtoolbar import DebugToolbarExtension
 from models import connect_db, db, User, Feedback
-from forms import RegisterForm, LoginForm, FeedbackForm
+from forms import FeedbackForm, RegisterForm, LoginForm, SendEmailForm, PwdResetForm
 from sqlalchemy.exc import IntegrityError
+from secrets import token_urlsafe
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///feedback_ex"
@@ -186,6 +187,58 @@ def login():
 
         form.u_name.errors = ['Invalid username or password.']
     return render_template('login.html', form=form)
+
+
+@app.route('/pwd-forgot', methods=['GET', 'POST'])
+def pwd_forgot():
+    '''Show email form to reset password, then
+    "send and email" (show link on page) and save
+    user data to reset password'''
+    if 'user_id' in session:
+        return redirect(f'/users')
+
+    form = SendEmailForm()
+
+    if form.validate_on_submit():
+        u = User.query.filter_by(email=form.email.data).first()
+        if u:
+            # Save token and user to retrieve at different page
+            session['reset_token'] = token_urlsafe(32)
+            session['reset_user_id'] = u.id
+            return render_template('pwd_forgot.html', token=session['reset_token'])
+
+        # if not u: user not found
+        form.email.errors = ['Email not found.']
+
+    return render_template('pwd_forgot.html', form=form)
+
+
+@app.route('/pwd-reset', methods=['GET', 'POST'])
+def pwd_reset():
+    '''Show new password form or process form data'''
+    if 'user_id' in session:
+        return redirect(f'/users')
+
+    # Exit if token is invalid
+    if request.args.get('token') != session['reset_token']:
+        flash('The link you clicked was not valid, please try again', 'danger')
+        return redirect('/login')
+
+    form = PwdResetForm()
+    if form.validate_on_submit():
+        # Get user saved in session
+        u = User.query.get(session['reset_user_id'])
+        # Change password
+        u.pass_hash = User.change_pwd(form.password.data)
+        db.session.commit()
+
+        # Remove data from session
+        session.pop('reset_token')
+        session.pop('reset_user_id')
+
+        return redirect('/login')
+
+    return render_template('pwd_reset.html', form=form)
 
 
 def login_user(form):

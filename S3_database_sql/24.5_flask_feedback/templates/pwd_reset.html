@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Reset Password{% endblock %}
+
+{% block content %}
+  <h1 class="display-1">Reset Password</h1>
+
+  <p class="lead">Enter a new password:</p>
+  
+  <form method="post">
+    {{ form.hidden_tag() }}
+
+    {% for field in form
+      if field.widget.input_type != 'hidden' %}
+    <div>
+      {{ field.label }}
+      {{ field(class_='form-control') }}
+
+      {% for error in field.errors %}
+      <span class="form-text text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+    {% endfor %}
+
+    <button class="btn btn-success mt-3">Save</button>
+  </form>
+{% endblock %}
