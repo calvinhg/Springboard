@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, session, flash, abort
 from flask_debugtoolbar import DebugToolbarExtension
-from models import connect_db, db, User
-from forms import RegisterForm, LoginForm
+from models import connect_db, db, User, Feedback
+from forms import RegisterForm, LoginForm, FeedbackForm
 from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
@@ -17,8 +17,15 @@ toolbar = DebugToolbarExtension(app)
 
 @app.route('/')
 def home_page():
-    return redirect('/register')
+    return redirect('/users')
     return render_template('index.html')
+
+
+@app.route('/users')
+def user_list():
+    '''Show user list'''
+    u_all = User.query.all()
+    return render_template('user_list.html', u_all=u_all)
 
 
 @app.route('/users/<string:u_name>')
@@ -30,9 +37,94 @@ def user_details(u_name):
 
     u = User.query.filter_by(username=u_name).first()
     if u:
-        return render_template('user_details.html', u=u)
+        f_user = Feedback.query.filter_by(username=u_name).all()
+        return render_template('user_details.html', u=u, f_user=f_user)
     # If no user found, show 404
     abort(404)
+
+
+@app.route('/users/<string:u_name>/delete', methods=['POST'])
+def user_delete(u_name):
+    '''Delete logged in user'''
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    User.query.filter_by(id=session['user_id']).delete()
+    db.session.commit()
+
+    session.pop('user_id')
+    flash(f'Nice knowing ya, @{u_name}', 'primary')
+    return redirect('/')
+
+
+@app.route('/users/<string:u_name>/feedback/add', methods=['GET', 'POST'])
+def add_feedback(u_name):
+    '''Show feedback form or submit it (if logged in)'''
+    if 'user_id' not in session:
+        flash('Please log in first', 'warning')
+        return redirect('/login')
+
+    u = User.query.filter_by(username=u_name).first()
+    if u:
+        # Verify user is adding feedback to own account
+        if u.id != session['user_id']:
+            abort(403)
+
+        form = FeedbackForm()
+        if form.validate_on_submit():
+            title = form.title.data
+            content = form.content.data
+
+            f = Feedback(title=title, content=content, username=u_name)
+            db.session.add(f)
+            db.session.commit()
+            return redirect(f'/users/{u_name}')
+
+        return render_template('feedback_add_update.html', form=form, action='Add new', u_name=u_name)
+
+
+@app.route('/feedback/<int:id>/update', methods=['GET', 'POST'])
+def update_feedback(id):
+    '''Show feedback update form or submit it (if logged in)'''
+    if 'user_id' not in session:
+        flash('Please log in first', 'warning')
+        return redirect('/login')
+
+    f = Feedback.query.get_or_404(id)
+    u = f.user
+    # Verify user is updating their own feedback
+    if u.id != session['user_id']:
+        abort(403)
+
+    form = FeedbackForm(obj=f)
+    if form.validate_on_submit():
+        f.title = form.title.data
+        f.content = form.content.data
+        db.session.commit()
+        return redirect(f'/users/{f.username}')
+
+    return render_template('feedback_add_update.html', form=form, action='Update', u_name=f.username)
+
+
+@app.route('/feedback/<int:id>/delete', methods=['POST'])
+def delete_feedback(id):
+    '''Delete user feedback (if logged in)'''
+    if 'user_id' not in session:
+        flash('Please log in first', 'warning')
+        return redirect('/login')
+
+    f = Feedback.query.get_or_404(id)
+    u = f.user
+    # Verify user is updating their own feedback
+    if u.id != session['user_id']:
+        abort(403)
+
+    db.session.delete(f)
+    db.session.commit()
+    return redirect(f'/users/{f.username}')
+
+
+# ---------------AUTHENTICATION-------------------
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -40,7 +132,7 @@ def register():
     '''Register new user or show register form'''
     if 'user_id' in session:
         # Redirect if already logged in
-        return redirect('/secret')
+        return redirect(f'/users')
 
     form = RegisterForm()
 
@@ -51,7 +143,7 @@ def register():
         if u:
             session['user_id'] = u.id
             flash('Welcome! Here are our secrets.', 'success')
-            return redirect('/secret')
+            return redirect(f'/users/{u.username}')
 
         # If taken, add error and show form again
         form.u_name.errors = ['This username is already taken.']
@@ -80,7 +172,7 @@ def register_user(form):
 def login():
     '''Login user or show login form'''
     if 'user_id' in session:
-        return redirect('/secret')
+        return redirect(f'/users')
 
     form = LoginForm()
 
@@ -90,7 +182,7 @@ def login():
         if u:
             session['user_id'] = u.id
             flash('Welcome back!', 'success')
-            return redirect('/secret')
+            return redirect(f'/users/{u.username}')
 
         form.u_name.errors = ['Invalid username or password.']
     return render_template('login.html', form=form)

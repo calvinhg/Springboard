@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}FeedBook Users{% endblock %}
+
+{% block content %}
+  <h1 class="display-1 mb-4">FeedBook Users</h1>
+  {% for u in u_all %}
+    <a href="/users/{{u.username}}" class="fs-5 badge rounded-pill text-bg-secondary text-decoration-none">@{{ u.username }}</a>
+  {% endfor %}
+{% endblock %}

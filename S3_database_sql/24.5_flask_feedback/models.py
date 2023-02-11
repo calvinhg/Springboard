@@ -52,3 +52,22 @@ class User(db.Model):
             return u
         else:
             return False
+
+
+class Feedback(db.Model):
+    '''Feedback Model with columns:
+    ```sql
+    id SERIAL PK,
+    title VARCHAR(100) NOT NULL,
+    content TEXT NOT NULL,
+    username TEXT NOT NULL FK REFS users.username
+    ```'''
+    __tablename__ = 'feedbacks'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    username = db.Column(db.Text, db.ForeignKey(
+        'users.username', ondelete='CASCADE'), nullable=False)
+
+    user = db.relationship('User', backref='feedbacks')

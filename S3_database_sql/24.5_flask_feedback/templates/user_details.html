@@ -8,21 +8,53 @@
   <table class="table rounded overflow-hidden">
     <tbody>
       <tr class="row">
-        <th class="col-3 ms-2">username</th>
+        <th class="col-3 ms-2">Username</th>
         <td class="col">{{ u.username }}</td>
       </tr>
       <tr class="row">
-        <th class="col-3 ms-2">email</th>
+        <th class="col-3 ms-2">Email</th>
         <td class="col">{{ u.email }}</td>
       </tr>
       <tr class="row">
-        <th class="col-3 ms-2">first name</th>
+        <th class="col-3 ms-2">First name</th>
         <td class="col">{{ u.first_name }}</td>
       </tr>
       <tr class="row">
-        <th class="col-3 ms-2">last name</th>
+        <th class="col-3 ms-2">Last name</th>
         <td class="col">{{ u.last_name }}</td>
       </tr>
     </tbody>
   </table>
+
+  {% if session['user_id'] == u.id %}
+  <a href="./{{u.username}}/feedback/add" class="btn btn-primary">Add new Feedback</a>
+  <form action="./{{u.username}}/delete" method="post" class="ms-2 d-inline">
+    <button class="btn btn-danger">Delete Account</button>
+  </form>
+  {% endif %}
+
+  <hr>
+
+  <div class="row gx-3">
+  {% for f in f_user %}
+  <div class="g-3 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+    <div class="card" id="card_{{ f.id }}">
+      <div class="card-body">
+        <h5 class="card-title">{{ f.title }}</h5>
+        <blockquote class="blockquote mb-0">
+          <p>{{ f.content }}</p>
+          <footer class="blockquote-footer">@{{ f.username }}</footer>
+        </blockquote>
+
+        {% if session['user_id'] == u.id %}
+        <a href="/feedback/{{f.id}}/update" class="card-link"><i class="bi bi-pencil-square"></i> Edit</a>
+        <form action="/feedback/{{f.id}}/delete" class='d-inline' method="post">
+          <button class="btn btn-link"><i class="bi bi-trash3"></i> Delete</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  </div>
 {% endblock %}
