@@ -3,12 +3,12 @@
 {% block content %}
 
   <div class="row justify-content-md-center">
-    <div class="col-md-4">
+    <div class="col-md-8 col-lg-6">
       <h2 class="join-message">Edit Your Profile.</h2>
       <form method="POST" id="user_form">
         {{ form.hidden_tag() }}
 
-        {% for field in form if field.widget.input_type != 'hidden' and field.name != 'password' %}
+        {% for field in form if field.widget.input_type != 'hidden' and field.name != 'pwd' %}
           {% for error in field.errors %}
             <span class="text-danger">{{ error }}</span>
           {% endfor %}
@@ -16,17 +16,17 @@
         {% endfor %}
 
         <p>To confirm changes, enter your password:</p>
-        {% if form.password.errors %}
-          {% for error in form.password.errors %}
+        {% if form.pwd.errors %}
+          {% for error in form.pwd.errors %}
             <span class="text-danger">
             {{ error }}
           </span>
           {% endfor %}
         {% endif %}
-        {{ form.password(placeholder="Enter your password to confirm", class="form-control") }}
+        {{ form.pwd(placeholder="Enter your password to confirm", class="form-control") }}
 
         <div class="edit-btn-area">
-          <button class="btn btn-success">Edit this user!</button>
+          <button class="btn btn-success">Edit this user</button>
           <a href="/users/{{ user_id }}" class="btn btn-outline-secondary">Cancel</a>
         </div>
       </form>
