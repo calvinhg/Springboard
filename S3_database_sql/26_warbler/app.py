@@ -302,6 +302,44 @@ def messages_destroy(message_id):
 
     return redirect(f"/users/{g.user.id}")
 
+##############################################################################
+# Like message routes
+
+
+@app.route('/users/toggle_like/<int:id>', methods=['POST'])
+def toggle_like(id):
+    """Like/unlike a message."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    msg = Message.query.get_or_404(id)
+
+    if msg.user_id == g.user.id:
+        # Skip if own message
+        return redirect('/')
+    elif msg in g.user.likes:
+        # Remove from likes if already there
+        g.user.likes.remove(msg)
+    else:  # Add to likes
+        g.user.likes.append(msg)
+
+    db.session.commit()
+    return redirect('/')
+
+
+@app.route('/users/<int:user_id>/likes')
+def show_likes(user_id):
+    """Show list of messages this user likes."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    user = User.query.get_or_404(user_id)
+    return render_template('users/likes.html', user=user, messages=user.likes)
+
 
 ##############################################################################
 # Homepage and error pages
