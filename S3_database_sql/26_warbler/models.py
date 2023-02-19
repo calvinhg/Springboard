@@ -73,7 +73,8 @@ class User(db.Model):
         "User",
         secondary="follows",
         primaryjoin=(Follows.user_following_id == id),
-        secondaryjoin=(Follows.user_being_followed_id == id)
+        secondaryjoin=(Follows.user_being_followed_id == id),
+        overlaps='followers'
     )
 
     likes = db.relationship('Message', secondary="likes")
@@ -150,7 +151,10 @@ class Message(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(
         'users.id', ondelete='CASCADE'), nullable=False)
 
-    user = db.relationship('User')
+    user = db.relationship('User', overlaps='messages')
+
+    def __repr__(self):
+        return f'<Message #{self.id} by user {self.user_id}>'
 
 
 def connect_db(app):
