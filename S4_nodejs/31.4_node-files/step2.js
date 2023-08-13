@@ -6,7 +6,7 @@ function cat(filePath) {
   fs.readFile(filePath, "utf-8", (err, data) => {
     if (err) {
       console.log("Error reading", filePath);
-      console.log(err);
+      console.log(err.message);
       process.exit(1);
     }
 

@@ -1,5 +1,5 @@
 const fs = require("fs");
-const process = require("process");
+const process = require("process"); //REMOVE
 const axios = require("axios");
 
 function cat(filePath) {
@@ -37,31 +37,4 @@ async function webCat(link) {
   }
 }
 
-const arg = process.argv[2];
-if (!arg) {
-  // Exit if no argument entered
-  console.error("Please enter an argument!");
-  process.exit(1);
-}
-
-if (arg === "--out") {
-  // Get input and output files
-  const output = process.argv[3];
-  const input = process.argv[4];
-
-  // Exit if either are missing
-  if (!output || !input) {
-    console.error("Please enter an output and an input file");
-    process.exit(1);
-  }
-
-  // Write to new file contents of input file
-  fs.writeFile(output, cat(input), "utf-8", (err) => {
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    }
-  });
-} else if (arg.startsWith("http"))
-  webCat(arg).then((data) => console.log(data));
-else console.log(cat(arg));
+module.exports = { cat, webCat };
