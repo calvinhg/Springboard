@@ -27,14 +27,21 @@ router.get("/", async (req, res, next) => {
 router.get("/:code", async (req, res, next) => {
   try {
     const { code } = req.params;
-    const results = await db.query(
+    const compRes = await db.query(
       "SELECT code, name, description FROM companies WHERE code=$1",
       [code]
     );
-
     // If none, throws error that gets handled in catch block
-    checkIfExists(results, code);
-    return res.json({ company: results.rows[0] });
+    checkIfExists(compRes, code);
+
+    // Get company's invoices
+    const company = compRes.rows[0];
+    const invRes = await db.query("SELECT * FROM invoices WHERE comp_code=$1", [
+      code,
+    ]);
+    company.invoices = invRes.rows;
+
+    return res.json({ company: company });
   } catch (err) {
     // If already an ExpressError, returns it to keep status code
     if (err instanceof ExpressError) {
