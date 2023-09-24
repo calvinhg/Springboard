@@ -106,21 +106,36 @@ router.post("/", async (req, res, next) => {
 });
 
 /** PUT /invoices/<id> accepts json and modifies invoice amount in DB.*/
-router.put("/:id", async (req, res, next) => {
+router.post("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { amt } = req.body;
+    let { amt, paid } = req.body;
 
-    if (!amt) {
-      throw new ExpressError("Please include a new amount", 400);
+    if (!amt || paid === undefined || paid === null) {
+      throw new ExpressError(
+        "Please include a new amount and if it's paid",
+        400
+      );
+    }
+    if (typeof paid !== "boolean") {
+      throw new ExpressError("<paid> must be true or false", 400);
     }
 
-    const results = await db.query(
-      "UPDATE invoices SET amt=$1 WHERE id=$2 RETURNING *",
-      [amt, id]
+    const res1 = await db.query("SELECT paid_date FROM invoices WHERE id=$1", [
+      id,
+    ]);
+    checkIfExists(res1, id);
+
+    let paid_date = res1.rows[0].paid_date;
+    if (paid && !paid_date) {
+      paid_date = new Date();
+    } else if (!paid) paid_date = null;
+
+    const res2 = await db.query(
+      "UPDATE invoices SET amt=$1, paid=$2, paid_date=$3 WHERE id=$4 RETURNING *",
+      [amt, paid, paid_date, id]
     );
-    checkIfExists(results, id);
-    return res.json({ invoice: results.rows[0] });
+    return res.json({ invoice: res2.rows[0] });
   } catch (err) {
     if (err instanceof ExpressError) {
       return next(err);

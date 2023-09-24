@@ -28,18 +28,27 @@ router.get("/", async (req, res, next) => {
 router.get("/:code", async (req, res, next) => {
   try {
     const { code } = req.params;
+    // Get company info with industries
     const compRes = await db.query(
-      "SELECT code, name, description FROM companies WHERE code=$1",
+      `
+      SELECT c.code, c.name, c.description, i.name AS industries
+      FROM companies as c
+      LEFT JOIN comps_inds AS ci ON c.code = ci.comp_code
+      LEFT JOIN industries AS i ON i.code = ci.ind_code
+      WHERE c.code=$1`,
       [code]
     );
     // If none, throws error that gets handled in catch block
     checkIfExists(compRes, code);
 
-    // Get company's invoices
+    // Select first result and add all other industries to it
     const company = compRes.rows[0];
-    const invRes = await db.query("SELECT * FROM invoices WHERE comp_code=$1", [
-      code,
-    ]);
+    company.industries = compRes.rows.map((c) => c.industries);
+    // Get company's invoices
+    const invRes = await db.query(
+      "SELECT id, amt, paid FROM invoices WHERE comp_code=$1",
+      [code]
+    );
     company.invoices = invRes.rows;
 
     return res.json({ company: company });
@@ -85,9 +94,9 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-/** PUT /companies/<code> accepts json and modifies company in DB.
+/** POST /companies/<code> accepts json and modifies company in DB.
  * Also checks for conflict or missing info.*/
-router.put("/:code", async (req, res, next) => {
+router.post("/:code", async (req, res, next) => {
   try {
     const { code } = req.params;
     const { name, description } = req.body;

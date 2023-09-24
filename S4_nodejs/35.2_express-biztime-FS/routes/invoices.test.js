@@ -94,38 +94,42 @@ describe("POST /invoices", () => {
   });
 });
 
-describe("PUT /invoices/:id", () => {
+describe("POST /invoices/:id", () => {
   test("Update an invoice", async () => {
-    const updatedInvoice = { comp_code: "test", amt: 50 };
+    const updatedInvoice = { comp_code: "test", amt: 50, paid: true };
     const res = await request(app)
-      .put(`/invoices/${testInv.id}`)
+      .post(`/invoices/${testInv.id}`)
       .send(updatedInvoice);
     expect(res.statusCode).toBe(200);
 
     expect(res.body.invoice).toHaveProperty("add_date");
     expect(res.body.invoice).toHaveProperty("id");
+    expect(res.body.invoice).toHaveProperty("paid_date");
     delete res.body.invoice.add_date;
     delete res.body.invoice.id;
+    delete res.body.invoice.paid_date;
 
-    updatedInvoice.paid = false;
-    updatedInvoice.paid_date = null;
+    updatedInvoice.paid = true;
     expect(res.body).toEqual({ invoice: updatedInvoice });
   });
 
   test("Update an invoice with missing amount", async () => {
     const res = await request(app)
-      .put(`/invoices/${testInv.id}`)
+      .post(`/invoices/${testInv.id}`)
       .send({ comp_code: "test" });
 
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({
-      error: { message: "Please include a new amount", status: 400 },
+      error: {
+        message: "Please include a new amount and if it's paid",
+        status: 400,
+      },
     });
   });
 
   test("Update an invoice with invalid amount", async () => {
     const res = await request(app)
-      .put(`/invoices/${testInv.id}`)
+      .post(`/invoices/${testInv.id}`)
       .send({ comp_code: "test", amt: -20.3 });
 
     expect(res.statusCode).toBe(400);

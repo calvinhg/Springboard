@@ -30,7 +30,9 @@ describe("GET /companies/:code", () => {
     const res = await request(app).get(`/companies/${testComp.code}`);
     expect(res.statusCode).toBe(200);
     expect(res.body.company.invoices).toBeInstanceOf(Array);
+    expect(res.body.company.industries).toBeInstanceOf(Array);
     delete res.body.company.invoices;
+    delete res.body.company.industries;
     expect(res.body).toEqual({ company: testComp });
   });
   test("Get an invalid company", async () => {
@@ -42,21 +44,26 @@ describe("GET /companies/:code", () => {
 describe("POST /companies", () => {
   test("Add a company", async () => {
     const anotherTestComp = {
-      code: "postTest",
       name: "Post Office",
       description: "incompetents",
     };
     const res = await request(app).post("/companies").send(anotherTestComp);
     expect(res.statusCode).toBe(201);
+    expect(res.body.company.code).toBe("Post-Office");
+    anotherTestComp.code = "Post-Office";
     expect(res.body).toEqual({ company: anotherTestComp });
   });
 
   test("Add a company with conflicting code", async () => {
-    testComp.name = "Not TestComp";
+    testComp.name = "test";
     const res = await request(app).post("/companies").send(testComp);
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({
-      error: { message: "Company code already exists!", status: 400 },
+      error: {
+        message:
+          "Auto-generated company code already exists. Please include a new code.",
+        status: 400,
+      },
     });
   });
 
@@ -70,14 +77,14 @@ describe("POST /companies", () => {
   });
 });
 
-describe("PUT /companies/:id", () => {
+describe("POST /companies/:code", () => {
   test("Update a company", async () => {
     const newName = {
       name: "New Company",
       description: "Under new managment!",
     };
     const res = await request(app)
-      .put(`/companies/${testComp.code}`)
+      .post(`/companies/${testComp.code}`)
       .send(newName);
     expect(res.statusCode).toBe(200);
     newName.code = testComp.code;
@@ -86,7 +93,6 @@ describe("PUT /companies/:id", () => {
 
   test("Update a company with conflicting name", async () => {
     const anotherTestComp = {
-      code: "postTest",
       name: "Post Office",
       description: "incompetents",
     };
@@ -94,7 +100,7 @@ describe("PUT /companies/:id", () => {
 
     anotherTestComp.name = testComp.name;
     const res = await request(app)
-      .put("/companies/postTest")
+      .post("/companies/Post-Office")
       .send(anotherTestComp);
 
     expect(res.statusCode).toBe(400);
