@@ -1,0 +1,9 @@
+.Pokedex-h1 {
+  text-align: center;
+}
+
+.Pokedex-list {
+  display: flex;
+  flex-direction: row;
+  flex-flow: wrap;
+}
