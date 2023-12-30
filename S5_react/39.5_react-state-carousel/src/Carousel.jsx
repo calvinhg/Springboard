@@ -9,15 +9,26 @@ import { faCircleChevronLeft, faCircleChevronRight } from '@fortawesome/free-sol
 
 function Carousel(props) {
   const [cardIdx, setCardIdx] = useState(0);
+  const [arrowLShow, setArrowLShow] = useState('hidden')
+  const [arrowRShow, setArrowRShow] = useState('show')
   const card = props.cardData[cardIdx];
   const total = props.cardData.length;
-  const goForward = () => setCardIdx(cardIdx + 1);
+  const goForward = () => {
+    setCardIdx(cardIdx + 1);
+    if (cardIdx + 2 === total) setArrowRShow('hidden')
+    else setArrowLShow("visible")
+  }
+  const goBack = () => {
+    setCardIdx(cardIdx - 1)
+    if (cardIdx === 1) setArrowLShow('hidden')
+    else setArrowRShow('visible')
+  };
 
   return (
     <div className="Carousel">
       <h1>{props.title}</h1>
       <div className="Carousel-main">
-        <i onClick={goForward} data-testid="left-arrow">
+        <i onClick={goBack} style={{visibility: arrowLShow}} data-testid="left-arrow">
           <FontAwesomeIcon icon={faCircleChevronLeft} size='2x'/>
         </i>
         <Card
@@ -26,7 +37,7 @@ function Carousel(props) {
           currNum={cardIdx + 1}
           totalNum={total}
         />
-        <i onClick={goForward} data-testid="right-arrow">
+        <i onClick={goForward} style={{visibility: arrowRShow}} data-testid="right-arrow">
           <FontAwesomeIcon icon={faCircleChevronRight} size='2x'/>
         </i>
       </div>
