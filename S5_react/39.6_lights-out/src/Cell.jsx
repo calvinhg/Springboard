@@ -5,18 +5,18 @@ import "./Cell.css";
  *
  * This has no state --- just two props:
  *
- * - flipCellsAroundMe: a function rec'd from the board which flips this
+ * - flipCells: a function rec'd from the board which flips this
  *      cell and the cells around of it
  *
  * - isLit: boolean, is this cell lit?
  *
- * This handles clicks --- by calling flipCellsAroundMe
+ * This handles clicks --- by calling flipCells
  *
  **/
-
-function Cell({ flipCellsAroundMe, isLit }) {
+const Cell = ({ flipCells, isLit, coord }) => {
   const classes = `Cell ${isLit ? "Cell-lit" : ""}`;
-  return <td className={classes} onClick={flipCellsAroundMe} />;
+  const boundFlipper = flipCells.bind(null, coord)
+  return <td className={classes} onClick={boundFlipper} />;
 }
 
 export default Cell;

@@ -7,12 +7,10 @@ import './App.css'
 /** Simple app that just shows the LightsOut game. */
 
 const App = () => {
-  const [count, setCount] = useState(0)
-
   return (
     <>      
       <div className="App">
-        <Board />
+        <Board nCols={5} nRows={5}/>
       </div>
     </>
   )
