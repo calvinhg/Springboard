@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Cell from "./Cell";
 import "./Board.css";
 
@@ -28,21 +28,39 @@ import "./Board.css";
  **/
 const Board = ({ nRows, nCols, chanceLightStartsOn }) => {
   const [board, setBoard] = useState(createBoard());
+  const [targetMoves, setTargetMoves] = useState(0)
+  const [moves, setMoves] = useState(0)
 
-  /** create a board nRows high/nCols wide, each cell randomly lit or unlit */
+  /** create a board nRows high/nCols wide, every cell lit */
   function createBoard() {
     const initialBoard = Array.from({ length: nRows },
       () => Array(nCols).fill(false));
     
-    const totalCells = nRows * nCols;
-    const maxCellsToFlip = Math.ceil(totalCells * 2 / 3);
-    const minCellsToFlip = Math.floor(totalCells / 3);
+    return initialBoard;
+  }
 
-    const arrOfIdx = initialBoard.reduce((arr, row, y) => {
+  /** Flip a random amount between 1/3 and 2/3 of cells with their neighbors */
+  function flipInitialCells() {
+    const totalCells = nRows * nCols;
+    const maxFlip = totalCells * 2 / 3;
+    const minFlip = totalCells / 3;
+    // Calc num of cells to flip
+    const nCellsToFlip = Math.floor(Math.random() * (maxFlip - minFlip) + minFlip);
+    
+    // Create array in form of ['0-0', '0-1', '0-2', '1-0'...]
+    const arrOfIdx = board.reduce((arr, row, y) => {
       return arr.concat(row.map((_, x) => y + "-" + x));
     }, []);
     
-    return initialBoard;
+    // Randomly remove items from the array, and flip their coord
+    for (let i = 0; i < nCellsToFlip; i++) {
+      const randIdx = Math.floor(Math.random() * arrOfIdx.length);
+      flipCells(arrOfIdx.splice(randIdx, 1)[0]);
+    };
+    setTargetMoves(nCellsToFlip)
+    setTimeout(() => {
+      setMoves(0)
+    }, 10);
   }
 
   /** checks to see if every cell in every row is false (unlit) */
@@ -72,20 +90,37 @@ const Board = ({ nRows, nCols, chanceLightStartsOn }) => {
       flipCell(y, x + 1, boardCopy);
       flipCell(y, x - 1, boardCopy);
 
+      setMoves(moves + 1)
+
       return boardCopy
     });
   }
 
+  useEffect(() => flipInitialCells(), [])  
+
   // if the game is won, just show a winning msg & render nothing else
-  if (hasWon()) console.log('winn');
+  if (hasWon()) {
+    return (<>
+      <p>You win!</p>
+      <button id="restartBtn" onClick={flipInitialCells}>Restart</button>
+    </>)
+  }
 
   // make table board
-  return (<table><tbody>
-    {board.map((row, y) => <tr key={"row-" + y}>
-      {row.map((cell, x) =>
-        <Cell flipCells={flipCells} isLit={cell} coord={y + "-" + x} key={x + "-" + y} />)}
-   </tr>) }
-  </tbody></table>)
+  return (<>
+    <table><tbody>
+      {board.map((row, y) => <tr key={"row-" + y}>
+        {row.map((cell, x) =>
+          <Cell flipCells={flipCells} isLit={cell}
+            coord={y + "-" + x} key={x + "-" + y} />)}
+      </tr>) }
+    </tbody></table>
+    <footer>
+      <span id="moves">Moves: {moves}</span>
+      <button id="restartBtn" onClick={flipInitialCells}>Restart</button>
+      <span id="target">Target: {targetMoves}</span>
+    </footer>
+  </>)
 }
 
 export default Board;
